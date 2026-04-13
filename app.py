@@ -4,7 +4,7 @@ import time
 
 st.set_page_config(page_title="DoorGuard Ultra", layout="centered")
 
-# ---------------- CYBER UI CSS ----------------
+# ---------------- CYBER UI ----------------
 st.markdown("""
 <style>
 html, body {
@@ -16,7 +16,6 @@ html, body {
     padding-top: 2rem;
 }
 
-/* Title */
 .title {
     text-align: center;
     font-size: 42px;
@@ -26,7 +25,6 @@ html, body {
     -webkit-text-fill-color: transparent;
 }
 
-/* Card */
 .card {
     background: #0b0f14;
     border: 1px solid rgba(255,255,255,0.08);
@@ -35,7 +33,6 @@ html, body {
     margin-top: 20px;
 }
 
-/* Buttons */
 .stButton button {
     width: 100%;
     border-radius: 12px;
@@ -50,7 +47,6 @@ html, body {
     background: rgba(0,229,255,0.1);
 }
 
-/* Step bar */
 .step {
     display: inline-block;
     padding: 8px 10px;
@@ -124,25 +120,29 @@ elif st.session_state.step == 1:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ---------------- STEP 3 (FIXED) ----------------
+# ---------------- STEP 3 (VIBE FIXED) ----------------
 elif st.session_state.step == 2:
     st.markdown("<div class='card'>", unsafe_allow_html=True)
 
     st.subheader("🧠 Vibe Check")
 
-    if "vibe" not in st.session_state:
-        st.session_state.vibe = random.randint(0,100)
+    if st.button("Run Vibe Check"):
+        st.session_state.vibe = random.randint(0, 100)
 
-    st.progress(st.session_state.vibe/100)
-    st.write(f"Vibe Score: {st.session_state.vibe}")
+    if "vibe" in st.session_state:
+        st.progress(st.session_state.vibe / 100)
+        st.write(f"Vibe Score: {st.session_state.vibe}")
+        st.caption("Analyzing aura... syncing quantum energy...")
 
-    if st.button("Accept Vibe"):
-        if st.session_state.vibe > 40:
-            st.session_state.step += 1
-            del st.session_state.vibe
-            st.rerun()
+        if st.session_state.vibe > 75:
+            st.success("Elite vibes detected 😎🔥")
+
+            if st.button("Proceed"):
+                del st.session_state.vibe
+                st.session_state.step += 1
+                st.rerun()
         else:
-            st.error("Bad vibes 🚫")
+            st.error("Vibe too weak 💀 try again")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -153,14 +153,15 @@ elif st.session_state.step == 3:
     st.subheader("👁 Face Scan")
 
     if "face" not in st.session_state:
-        time.sleep(1)
-        st.session_state.face = random.choice(["ok","no"])
+        with st.spinner("Scanning..."):
+            time.sleep(1)
+            st.session_state.face = random.choice(["ok","no"])
 
     if st.session_state.face == "ok":
         st.success("Face accepted 😎")
         if st.button("Proceed"):
-            st.session_state.step += 1
             del st.session_state.face
+            st.session_state.step += 1
             st.rerun()
     else:
         st.error("Face rejected 💀")
@@ -196,7 +197,7 @@ elif st.session_state.step == 5:
 
     ph = st.empty()
     for i in range(5,0,-1):
-        ph.markdown(f"# {i}")
+        ph.markdown(f"<h1 style='text-align:center;color:#ff4060'>{i}</h1>", unsafe_allow_html=True)
         time.sleep(1)
 
     if st.button("OPEN"):
