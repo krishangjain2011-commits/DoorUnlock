@@ -4,6 +4,53 @@ import time
 
 st.set_page_config(page_title="DoorGuard Ultra", layout="centered")
 
+# ---------------- CUSTOM CSS (UI UPGRADE) ----------------
+st.markdown("""
+<style>
+body {
+    background-color: #05070a;
+}
+.main {
+    background-color: #05070a;
+}
+.block-container {
+    padding-top: 2rem;
+}
+
+h1, h2, h3, h4 {
+    color: #00e5ff;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.stButton>button {
+    background: transparent;
+    border: 1px solid #00e5ff;
+    color: #00e5ff;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.stButton>button:hover {
+    background-color: rgba(0,229,255,0.1);
+}
+
+.card {
+    background: #0b0f14;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 20px;
+}
+
+.success {
+    color: #00ffa3;
+}
+.error {
+    color: #ff4060;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # ---------------- STATE ----------------
 if "step" not in st.session_state:
     st.session_state.step = 0
@@ -12,110 +59,145 @@ if "otp" not in st.session_state:
     st.session_state.otp = str(random.randint(100000, 999999))
 
 # ---------------- HEADER ----------------
-st.title("🚪 DoorGuard Ultra™")
-st.subheader("One Door. Seven Checks.")
+st.markdown("<h1 style='text-align:center;'>🚪 DoorGuard Ultra™</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align:center;color:gray;'>One Door. Seven Checks.</p>", unsafe_allow_html=True)
 
-st.write(f"Current Step: {st.session_state.step + 1}/7")
+st.progress((st.session_state.step + 1)/7)
 
-# ---------------- STEP 1: CAPTCHA ----------------
+# ---------------- STEP 1 ----------------
 if st.session_state.step == 0:
-    st.header("🤖 CAPTCHA")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    st.subheader("🤖 CAPTCHA")
 
     options = ["🐶", "🐱", "🍎", "🚗"]
-    target = "🐶"
-
-    choice = st.radio("Select Dog:", options)
+    choice = st.radio("Select the dog:", options)
 
     if st.button("Verify"):
-        if choice == target:
+        if choice == "🐶":
             st.success("Human verified 😎")
             st.session_state.step += 1
+            st.rerun()
         else:
-            st.error("Try again bro 🤖")
+            st.error("Robot detected 🤖")
 
-# ---------------- STEP 2: OTP ----------------
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------- STEP 2 ----------------
 elif st.session_state.step == 1:
-    st.header("📠 Fax OTP (lol)")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
+    st.subheader("📠 Fax OTP (lol)")
     st.info(f"Hint: {st.session_state.otp}")
 
     user_otp = st.text_input("Enter OTP")
 
-    if st.button("Submit OTP"):
+    if st.button("Submit"):
         if user_otp == st.session_state.otp:
-            st.success("OTP Verified")
+            st.success("OTP Verified ✅")
             st.session_state.step += 1
+            st.rerun()
         else:
             st.error("Wrong OTP 💀")
 
-# ---------------- STEP 3: VIBE CHECK ----------------
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------- STEP 3 ----------------
 elif st.session_state.step == 2:
-    st.header("🧠 Vibe Check")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    vibe = random.randint(0, 100)
-    st.progress(vibe / 100)
+    st.subheader("🧠 Vibe Check")
 
-    st.write(f"Your vibe score: {vibe}")
+    if "vibe" not in st.session_state:
+        st.session_state.vibe = random.randint(0, 100)
+
+    st.progress(st.session_state.vibe / 100)
+    st.write(f"Vibe Score: {st.session_state.vibe}")
 
     if st.button("Accept Vibe"):
-        if vibe > 40:
-            st.success("Vibe acceptable 😌")
+        if st.session_state.vibe > 40:
+            st.success("Good vibes 😌")
             st.session_state.step += 1
+            del st.session_state.vibe
+            st.rerun()
         else:
-            st.error("Bad vibes detected 🚫")
+            st.error("Bad vibes 🚫")
 
-# ---------------- STEP 4: FACE SCAN ----------------
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------- STEP 4 (FIXED) ----------------
 elif st.session_state.step == 3:
-    st.header("👁 Face Scan")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    st.write("Pretending to scan your face...")
+    st.subheader("👁 Face Scan")
 
-    time.sleep(2)
+    if "face_result" not in st.session_state:
+        with st.spinner("Scanning face..."):
+            time.sleep(2)
+            st.session_state.face_result = random.choice(["approved", "rejected"])
 
-    result = random.choice(["approved", "rejected"])
-
-    if result == "approved":
+    if st.session_state.face_result == "approved":
         st.success("Face recognized 😎")
+
         if st.button("Proceed"):
             st.session_state.step += 1
+            del st.session_state.face_result
+            st.rerun()
     else:
         st.error("Face not convincing 💀")
 
-# ---------------- STEP 5: TERMS ----------------
+        if st.button("Retry"):
+            del st.session_state.face_result
+            st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------- STEP 5 ----------------
 elif st.session_state.step == 4:
-    st.header("📜 Terms & Conditions")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
-    st.text_area("Terms", "Very long boring legal stuff..." * 50)
+    st.subheader("📜 Terms & Conditions")
 
-    agree = st.checkbox("I read everything (sure you did)")
+    st.text_area("Terms", "Very long boring legal text...\n" * 20)
+
+    agree = st.checkbox("I agree to everything blindly")
 
     if st.button("Continue"):
         if agree:
-            st.success("Legally trapped ✅")
             st.session_state.step += 1
+            st.rerun()
         else:
             st.error("You must agree 😈")
 
-# ---------------- STEP 6: COUNTDOWN ----------------
-elif st.session_state.step == 5:
-    st.header("⏱ Final Countdown")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    countdown = st.empty()
+# ---------------- STEP 6 ----------------
+elif st.session_state.step == 5:
+    st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    st.subheader("⏱ Final Countdown")
+
+    placeholder = st.empty()
 
     for i in range(5, 0, -1):
-        countdown.write(f"{i}...")
+        placeholder.markdown(f"<h1 style='text-align:center;color:#ff4060'>{i}</h1>", unsafe_allow_html=True)
         time.sleep(1)
-
-    st.warning("Last chance bro")
 
     if st.button("OPEN DOOR"):
         st.session_state.step += 1
+        st.rerun()
 
-# ---------------- STEP 7: SUCCESS ----------------
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# ---------------- STEP 7 ----------------
 elif st.session_state.step == 6:
-    st.header("🔓 ACCESS GRANTED")
+    st.markdown('<div class="card">', unsafe_allow_html=True)
 
+    st.subheader("🔓 ACCESS GRANTED")
     st.success("Door was open the whole time 😂")
 
     if st.button("Restart"):
         st.session_state.step = 0
+        st.rerun()
+
+    st.markdown('</div>', unsafe_allow_html=True)
