@@ -29,55 +29,9 @@ The twist? **The door was already open the whole time. Since 2019. No one checke
 
 ## Run It
 
-No install. No server. No dependencies.
-
-```bash
-git clone https://github.com/YOUR_USERNAME/doorguard-ultra
-cd doorguard-ultra
-# just open index.html in any browser
-open index.html
-```
-
-Or just double-click `index.html`.
+Just Directly Deploy the app on streamlit
 
 ---
-
-## Project Structure
-
-```
-doorguard-ultra/
-├── index.html              # Entry point
-├── css/
-│   ├── base.css            # Design tokens, resets, typography helpers
-│   ├── layout.css          # Statusbar, app grid, door panel, step tracker
-│   ├── components.css      # Buttons, badges, captcha, OTP, vibe, face, terms
-│   ├── modals.css          # Modal overlay and box styles
-│   └── animations.css      # All keyframe animations
-└── js/
-    ├── utils.js            # delay(), toast(), randomPick(), randInt(), randFloat()
-    ├── state.js            # AppState — single source of truth
-    ├── ui.js               # UI controller — modals, step tracker, door, clock
-    ├── main.js             # Pipeline orchestrator + DOMContentLoaded bootstrap
-    └── steps/
-        ├── captcha.js      # Step 1: CAPTCHA (normal + existential)
-        ├── otp.js          # Step 2: Fax OTP
-        ├── vibe.js         # Step 3: AI Vibe Analysis
-        ├── face.js         # Step 4: Facial expression scan
-        ├── terms.js        # Step 5: Terms & Conditions
-        ├── countdown.js    # Step 6: Final countdown
-        └── success.js      # Step 7: Access granted
-```
-
----
-
-## Tech Stack
-
-- **Vanilla HTML/CSS/JS** — zero frameworks, zero dependencies
-- **No build step** — just open and run
-- Works on any modern browser
-
----
-
 ## Theme
 
 **Over-Secured System** — A system designed to perform a simple task (opening a door) that constantly doubts, questions, and second-guesses the user in unnecessary and unpredictable ways.
